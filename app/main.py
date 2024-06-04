@@ -1,3 +1,4 @@
+import ctypes
 import os
 import shutil
 import subprocess
@@ -11,6 +12,9 @@ def main():
     args = sys.argv[4:]
 
     temp_dir = mkdtemp()
+    libc = ctypes.cdll.LoadLibrary("libc.so.6")
+    libc.unshare(0x20000000)
+
     shutil.copy(command, temp_dir)
     os.chroot(temp_dir)
     command = os.path.join("/", os.path.basename(command))
